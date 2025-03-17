@@ -186,7 +186,9 @@ GLOBAL_LIST(objects_of_interest) // This is used to track the stealing objective
 
 // Areas exempt from explosive antigrief (not Z-levels)
 GLOBAL_LIST_INIT(explosive_antigrief_exempt_areas, list(
-	//non currently
+	// raftnetwork start
+	/area/event
+	// raftnetwork end
 ))
 
 GLOBAL_LIST_EMPTY(loose_yautja_gear)

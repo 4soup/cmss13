@@ -65,6 +65,10 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, list(
 
 // Allow user to view a HUD (putting on medical glasses)
 /datum/mob_hud/proc/add_hud_to(mob/user, source)
+	// raftnetwork start
+	if(!user)
+		return
+	// raftnetwork end
 	hudusers |= user
 	if(hudusers[user])
 		hudusers[user] |= list(source)
@@ -98,6 +102,7 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, list(
 /datum/mob_hud/proc/add_to_single_hud(mob/user, mob/target)
 	if(!user.client)
 		return
+
 	for(var/i in hud_icons)
 		if(i in target.hud_list)
 			user.client.images |= target.hud_list[i]
@@ -264,7 +269,7 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, list(
 
 /mob/living/carbon/human/remove_from_all_mob_huds()
 	for(var/datum/mob_hud/hud in GLOB.huds)
-		if(istype(hud, /datum/mob_hud/xeno))
+		if(istype(hud, /datum/mob_hud/xeno) || !src.hud_list)
 			continue
 		hud.remove_from_hud(src)
 

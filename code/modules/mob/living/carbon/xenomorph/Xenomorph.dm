@@ -457,11 +457,14 @@
 	add_abilities()
 	create_reagents(100)
 	regenerate_icons()
-
-	toggle_xeno_hostilehud()
+	// raftnetwork start
+		// verbs != procs :)
+	// toggle_xeno_hostilehud()
+	// recalculate_everything()
+	// toggle_xeno_mobhud() //This is a verb, but fuck it, it just werks
+	create_hostile_and_status_huds()
 	recalculate_everything()
-	toggle_xeno_mobhud() //This is a verb, but fuck it, it just werks
-
+	// raftnetwork end
 	. = ..()
 
 					//Set leader to the new mob
@@ -512,6 +515,24 @@
 
 	RegisterSignal(src, COMSIG_MOB_SCREECH_ACT, PROC_REF(handle_screech_act))
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_XENO_SPAWN, src)
+	
+// raftnetwork start
+/mob/living/carbon/xenomorph/proc/create_hostile_and_status_huds()
+	if(xeno_hostile_hud || xeno_mobhud)
+		return
+
+	var/mob/user = usr
+	if(!user || !istype(user))
+		return
+
+	var/datum/mob_hud/H = GLOB.huds[MOB_HUD_XENO_HOSTILE]
+	H.add_hud_to(user, user)
+	xeno_hostile_hud = TRUE
+
+	var/datum/mob_hud/S = GLOB.huds[MOB_HUD_XENO_STATUS]
+	S.add_hud_to(user, user)
+	xeno_mobhud = TRUE
+// raftnetwork end
 
 /mob/living/carbon/xenomorph/proc/handle_screech_act(mob/self, mob/living/carbon/xenomorph/queen/queen)
 	SIGNAL_HANDLER
@@ -759,31 +780,34 @@
 		xeno_attack_delay(src)
 		return FALSE
 	return ..()
-
-/mob/living/carbon/xenomorph/pull_response(mob/puller)
-	if(stat == DEAD)
-		return TRUE
-	if(has_species(puller,"Human")) // If the Xeno is alive, fight back against a grab/pull
-		var/mob/living/carbon/human/H = puller
-		if(H.ally_of_hivenumber(hivenumber))
-			return TRUE
-		puller.apply_effect(rand(caste.tacklestrength_min,caste.tacklestrength_max), WEAKEN)
-		playsound(puller.loc, 'sound/weapons/pierce.ogg', 25, 1)
-		puller.visible_message(SPAN_WARNING("[puller] tried to pull [src] but instead gets a tail swipe to the head!"))
-		return FALSE
-	if(issynth(puller) && (mob_size >= 4 || istype(src, /mob/living/carbon/xenomorph/warrior)))
-		var/mob/living/carbon/human/synthetic/puller_synth = puller
-		if(puller_synth.ally_of_hivenumber(hivenumber))
-			return TRUE
-		puller.apply_effect(1, DAZE)
-		shake_camera(puller, 2, 1)
-		playsound(puller.loc, 'sound/weapons/alien_claw_block.ogg', 25, 1)
-		var/facing = get_dir(src, puller)
-		throw_carbon(puller, facing, 1, SPEED_SLOW, shake_camera = FALSE, immobilize = FALSE)
-		puller.apply_effect(get_xeno_stun_duration(puller, 1), WEAKEN)
-		puller.visible_message(SPAN_WARNING("[puller] tried to pull [src] but instead gets whacked in the chest!"))
-		return FALSE
-	return TRUE
+	
+// raftnetwork start
+	// 		pulling xenos is a funny concept, I like funny things, therefore it stays. 
+// /mob/living/carbon/xenomorph/pull_response(mob/puller)
+// 	if(stat == DEAD)
+// 		return TRUE
+// 	if(has_species(puller,"Human")) // If the Xeno is alive, fight back against a grab/pull
+// 		var/mob/living/carbon/human/H = puller
+// 		if(H.ally_of_hivenumber(hivenumber))
+// 			return TRUE
+// 		puller.apply_effect(rand(caste.tacklestrength_min,caste.tacklestrength_max), WEAKEN)
+// 		playsound(puller.loc, 'sound/weapons/pierce.ogg', 25, 1)
+// 		puller.visible_message(SPAN_WARNING("[puller] tried to pull [src] but instead gets a tail swipe to the head!"))
+// 		return FALSE
+// 	if(issynth(puller) && (mob_size >= 4 || istype(src, /mob/living/carbon/xenomorph/warrior)))
+// 		var/mob/living/carbon/human/synthetic/puller_synth = puller
+// 		if(puller_synth.ally_of_hivenumber(hivenumber))
+// 			return TRUE
+// 		puller.apply_effect(1, DAZE)
+// 		shake_camera(puller, 2, 1)
+// 		playsound(puller.loc, 'sound/weapons/alien_claw_block.ogg', 25, 1)
+// 		var/facing = get_dir(src, puller)
+// 		throw_carbon(puller, facing, 1, SPEED_SLOW, shake_camera = FALSE, immobilize = FALSE)
+// 		puller.apply_effect(get_xeno_stun_duration(puller, 1), WEAKEN)
+// 		puller.visible_message(SPAN_WARNING("[puller] tried to pull [src] but instead gets whacked in the chest!"))
+// 		return FALSE
+// 	return TRUE
+// raftnetwork end
 
 /mob/living/carbon/xenomorph/resist_grab(moving_resist)
 	if(!pulledby)
