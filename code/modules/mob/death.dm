@@ -128,3 +128,7 @@
 			if(isxeno(cause_mob))
 				var/mob/living/carbon/xenomorph/X = cause_mob
 				X.behavior_delegate.on_kill_mob(src)
+			// raftnetwork start
+			if(ishuman(cause_mob))
+				SEND_SIGNAL(cause_mob, COMSIG_HUMAN_KILLED_MOB, src)
+			// raftnetwork end

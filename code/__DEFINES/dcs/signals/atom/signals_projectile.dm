@@ -32,3 +32,10 @@
 
 /// Called when a bullet hits a living mob on a sprite click (original target is final target)
 #define COMSIG_BULLET_DIRECT_HIT "bullet_direct_hit"
+
+// raftnetwork start
+	// from /mob/living/bullet_act (mob/living/hit)
+	// registered from /obj/projectile.firer. 
+	// used to signal that firer's bullet hit a living mob
+#define COMSIG_FIRER_BULLET_HIT_XENO "firer_bullet_hit_xeno"
+// raftnetowrk end

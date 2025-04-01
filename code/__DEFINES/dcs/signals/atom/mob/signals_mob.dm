@@ -185,3 +185,11 @@
 #define COMSIG_MOB_END_TUTORIAL "mob_end_tutorial"
 
 #define COMSIG_MOB_NESTED "mob_nested"
+
+
+
+// raftnetwork start
+	// used for mlg_subsystem
+/// From /mob/proc/handle_death_cause : (mob/cause_mob, mob/dead)
+#define COMSIG_HUMAN_KILLED_MOB "human_killed_mob"
+// raftnetwork end
